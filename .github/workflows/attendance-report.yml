@@ -51,15 +51,6 @@ jobs:
           PR_REPO: ${{ github.repository }}
         run: python reviewer-core/scripts/generate_attendance_report.py
 
-      # Move reports to correct location
-      - name: Move reports to correct location
-        run: |
-          find devlinux/devlinux -name "homework_report.csv" -type f 2>/dev/null | while read file; do
-            dir=$(dirname "$file" | sed 's|devlinux/||')
-            mkdir -p "devlinux/$dir"
-            mv "$file" "devlinux/$dir/"
-          done
-
       # Configure git
       - name: Configure git
         run: |
@@ -71,11 +62,10 @@ jobs:
       - name: Commit and push reports
         run: |
           cd devlinux
-          if git diff --quiet; then
-            echo "✅ No changes to reports"
-          else
-            git add "**/homework_report.csv"
+          if git add "**/homework_report.csv" && ! git diff --cached --quiet; then
             git commit -m "📊 Update attendance report - $(date +'%Y-%m-%d')"
             git push origin master
             echo "✅ Reports pushed to GitHub"
+          else
+            echo "✅ No changes to reports"
           fi
