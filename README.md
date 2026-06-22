@@ -248,6 +248,16 @@ git pull
 git checkout -b tên-môn/KXX.X/tên-của-bạn/session-XX
 ```
 
+> ⚠️ **RẤT QUAN TRỌNG:** **LUÔN `git checkout master` TRƯỚC khi tạo branch session mới!**
+>
+> Nếu bạn quên `git checkout master` và tạo branch mới từ branch buổi cũ, PR của bạn sẽ chứa code từ **cả 2 buổi** → bị reject tự động.
+>
+> **Cách kiểm tra bạn đang ở master:**
+> ```bash
+> git branch   # phải thấy * master (có dấu *)
+> git log --oneline | head -1  # phải thấy commit mới nhất từ master
+> ```
+
 **Format branch bắt buộc:** `tên-môn/KXX.X/tên-của-bạn/session-XX`
 
 | Thành phần | Ý nghĩa | Ví dụ |
@@ -398,7 +408,7 @@ Hệ thống sẽ **tự động close PR và báo lý do** nếu vi phạm mộ
 
 | Lý do bị reject | Cách khắc phục |
 |---|---|
-| Nộp file từ nhiều session cùng lúc (vd: session-01 + session-03) | Mỗi PR chỉ nộp **1 session duy nhất**. Tạo PR riêng cho mỗi session |
+| Nộp file từ nhiều session cùng lúc (vd: session-01 + session-03) | **Nguyên nhân:** Quên `git checkout master` trước khi tạo branch session-02. Branch mới được tạo từ session-01 → kéo theo code cũ.<br><br>**Cách khắc phục:**<br>1. Đảm bảo **LUÔN quay về master trước khi tạo branch buổi mới:**<br>&nbsp;&nbsp;&nbsp;&nbsp;```bash<br>&nbsp;&nbsp;&nbsp;&nbsp;git checkout master<br>&nbsp;&nbsp;&nbsp;&nbsp;git pull<br>&nbsp;&nbsp;&nbsp;&nbsp;git checkout -b embedded-linux/K26.1/ten-ban/session-02<br>&nbsp;&nbsp;&nbsp;&nbsp;```<br>2. Nếu đã tạo branch sai, **bạn có 2 cách:**<br>&nbsp;&nbsp;&nbsp;&nbsp;- **Cách 1 (nhanh):** Đóng PR sai, tạo branch mới đúng từ master → PR mới<br>&nbsp;&nbsp;&nbsp;&nbsp;- **Cách 2 (phức tạp):** Reset branch cũ bằng `git reset --hard origin/master` (mất code session trước) |
 | Sửa file ngoài thư mục session (vd: `README.md`, `class.json` ở root) | Chỉ được tạo/sửa file bên trong thư mục session của bạn |
 | Sửa file không phải Exercise folders (vd: sửa `homework.md`) | Chỉ được tạo/sửa file **trong** `Exercise_N/` folders |
 
